@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+
+      - name: Build backend (Maven)
+        working-directory: allinone
+        run: mvn -DskipTests package
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: allinone/frontend-react/package-lock.json
+
+      - name: Install frontend deps
+        working-directory: allinone/frontend-react
+        run: npm ci
+
+      - name: Build frontend (Vite)
+        working-directory: allinone/frontend-react
+        run: npm run build
