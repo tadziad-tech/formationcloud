@@ -1,0 +1,116 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: dark; }
+* { -webkit-tap-highlight-color: transparent; }
+html, body, #root { height: 100%; }
+
+/* ---------- Premium Dark Glass Background ---------- */
+@keyframes fc-mesh-pan {
+  0%   { background-position: 0% 0%, 100% 0%, 0% 100%, 100% 100%; }
+  50%  { background-position: 100% 10%, 0% 30%, 50% 100%, 80% 70%; }
+  100% { background-position: 0% 0%, 100% 0%, 0% 100%, 100% 100%; }
+}
+
+body {
+  @apply bg-slate-950 text-slate-100;
+  background-image:
+    radial-gradient(900px circle at 15% 10%, rgba(99,102,241,0.22), transparent 55%),
+    radial-gradient(700px circle at 85% 15%, rgba(236,72,153,0.16), transparent 52%),
+    radial-gradient(900px circle at 25% 95%, rgba(16,185,129,0.12), transparent 55%),
+    radial-gradient(950px circle at 95% 85%, rgba(245,158,11,0.10), transparent 58%);
+  background-size: 160% 160%;
+  animation: fc-mesh-pan 16s ease-in-out infinite;
+  background-attachment: fixed;
+}
+
+/* ---------- Motion helpers ---------- */
+@keyframes fc-float-1 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+@keyframes fc-float-2 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(8px)} }
+@keyframes fc-float-3 { 0%,100%{transform:translateY(0) rotate(0)} 50%{transform:translateY(-6px) rotate(1deg)} }
+.fc-float-1 { animation: fc-float-1 6s ease-in-out infinite; }
+.fc-float-2 { animation: fc-float-2 7.5s ease-in-out infinite; }
+.fc-float-3 { animation: fc-float-3 8.5s ease-in-out infinite; }
+
+/* ---------- Glass System (global) ---------- */
+@layer components {
+  .card {
+    @apply rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl shadow-lg shadow-black/20;
+  }
+
+  .kpi { @apply card p-4 flex items-center justify-between; }
+  .kpi h3 { @apply text-xs font-medium text-slate-300 tracking-wide uppercase; }
+  .kpi .v { @apply text-2xl font-semibold text-slate-100; }
+
+  .table { @apply w-full text-sm; }
+  .table thead { @apply text-slate-300; }
+  .table th { @apply text-left text-[11px] font-semibold uppercase tracking-wide py-2 px-3 whitespace-nowrap; }
+  .table td { @apply py-2 px-3 whitespace-nowrap text-slate-200; }
+  .table tr { @apply border-t border-white/10; }
+  .table tbody tr:hover { @apply bg-white/5; }
+
+  .btn {
+    @apply inline-flex items-center justify-center rounded-xl px-3 py-2 text-sm font-medium
+    border border-white/10 bg-white/5 hover:bg-white/10 active:scale-[0.99] transition;
+  }
+  .btn-primary { @apply border-indigo-400/30 bg-indigo-500/20 text-indigo-50 hover:bg-indigo-500/30; }
+  .btn-danger  { @apply border-red-400/30 bg-red-500/20 text-red-50 hover:bg-red-500/30; }
+
+  .badge {
+    @apply inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium
+    border border-white/10 bg-white/5 text-slate-200;
+  }
+
+  .badge-ok { @apply border-emerald-400/25 bg-emerald-500/15 text-emerald-100; }
+  .badge-warn { @apply border-amber-400/25 bg-amber-500/15 text-amber-100; }
+  .badge-bad { @apply border-red-400/25 bg-red-500/15 text-red-100; }
+  .badge-neutral { @apply border-slate-400/20 bg-slate-500/10 text-slate-200; }
+
+  .fc-field {
+    @apply w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm
+    text-slate-100 placeholder:text-slate-400 outline-none;
+    @apply focus:ring-2 focus:ring-indigo-500/35 focus:border-indigo-400/30;
+  }
+
+  /* Dropdowns : rendre les <select> premium + lisibles (toutes les pages) */
+  select.fc-field {
+    padding-right: 2.5rem;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-repeat: no-repeat;
+    background-position: right 0.9rem center;
+    background-size: 14px 14px;
+    /* flèche SVG (gris) */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='rgba(148,163,184,0.95)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  }
+
+  /* Options : éviter le fond blanc agressif */
+  select.fc-field option {
+    background-color: rgb(2 6 23); /* slate-950 */
+    color: rgb(226 232 240); /* slate-200 */
+  }
+
+  select.fc-field:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .fc-field-sm {
+    @apply rounded-xl border border-white/10 bg-white/5 px-2 py-1 text-sm
+    text-slate-100 placeholder:text-slate-400 outline-none;
+    @apply focus:ring-2 focus:ring-indigo-500/35 focus:border-indigo-400/30;
+  }
+
+  .segmented { @apply inline-flex rounded-xl border border-white/10 bg-white/5 overflow-hidden; }
+  .segmented-btn { @apply px-3 py-2 text-sm text-slate-200 hover:bg-white/10 transition; }
+  .segmented-btn-active { @apply bg-indigo-500/20 text-white; }
+
+  .alert-error { @apply text-sm text-red-200 bg-red-500/10 border border-red-500/20 rounded-xl px-3 py-2; }
+  .alert-success { @apply text-sm text-emerald-200 bg-emerald-500/10 border border-emerald-500/20 rounded-xl px-3 py-2; }
+  .alert-info { @apply text-sm text-slate-200 bg-white/5 border border-white/10 rounded-xl px-3 py-2; }
+
+  .muted { @apply text-slate-400; }
+  .title { @apply text-lg font-semibold text-slate-100; }
+}

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Certificat {{CERT_CODE}}</title>
+  <style>
+    @page { size: A4 landscape; margin: 18mm; }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      color: #0b1220;
+    }
+    .card {
+      border-radius: 18px;
+      padding: 28px;
+      border: 1px solid rgba(15, 23, 42, 0.12);
+      position: relative;
+      overflow: hidden;
+    }
+    .glow1 {
+      position: absolute; inset: -120px auto auto -140px;
+      width: 380px; height: 380px;
+      background: rgba(99, 102, 241, 0.18);
+      filter: blur(60px);
+      border-radius: 999px;
+    }
+    .glow2 {
+      position: absolute; inset: auto -160px -120px auto;
+      width: 420px; height: 420px;
+      background: rgba(236, 72, 153, 0.14);
+      filter: blur(70px);
+      border-radius: 999px;
+    }
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #6366f1, #ec4899, #10b981);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+    }
+    .brand-title { font-weight: 700; font-size: 14px; }
+    .brand-sub { font-size: 11px; color: rgba(15, 23, 42, 0.7); }
+
+    .meta {
+      text-align: right;
+      font-size: 10.5px;
+      color: rgba(15, 23, 42, 0.72);
+    }
+    .code {
+      font-family: monospace;
+      font-size: 10.5px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(15, 23, 42, 0.14);
+      display: inline-block;
+      margin-top: 6px;
+    }
+
+    .title {
+      margin-top: 26px;
+      font-size: 34px;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+    }
+    .subtitle {
+      margin-top: 4px;
+      font-size: 12.5px;
+      color: rgba(15, 23, 42, 0.74);
+    }
+
+    .content {
+      margin-top: 18px;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .left { flex: 1 1 auto; }
+
+    .name {
+      margin-top: 10px;
+      font-size: 22px;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    .box {
+      margin-top: 14px;
+      background: rgba(15, 23, 42, 0.03);
+      border: 1px solid rgba(15, 23, 42, 0.10);
+      border-radius: 16px;
+      padding: 14px 14px;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .kv { padding: 10px 12px; border-radius: 14px; border: 1px solid rgba(15, 23, 42, 0.08); background: rgba(255,255,255,0.7); }
+    .k { font-size: 10px; color: rgba(15, 23, 42, 0.62); }
+    .v { margin-top: 4px; font-size: 12.5px; font-weight: 700; }
+
+    .right {
+      width: 240px;
+      flex: 0 0 240px;
+      border: 1px solid rgba(15, 23, 42, 0.10);
+      border-radius: 18px;
+      padding: 14px;
+      background: rgba(255,255,255,0.72);
+    }
+    .qr {
+      width: 220px;
+      height: 220px;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(15, 23, 42, 0.12);
+    }
+    .qr img { width: 220px; height: 220px; display: block; }
+    .verify {
+      margin-top: 10px;
+      font-size: 10px;
+      color: rgba(15, 23, 42, 0.62);
+      word-break: break-all;
+    }
+
+    .footer {
+      margin-top: 16px;
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: flex-end;
+      font-size: 10px;
+      color: rgba(15, 23, 42, 0.62);
+    }
+    .sign {
+      display: flex;
+      gap: 18px;
+      align-items: flex-end;
+    }
+    .sig {
+      min-width: 200px;
+      border-top: 1px solid rgba(15, 23, 42, 0.18);
+      padding-top: 6px;
+      font-size: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="glow1"></div>
+    <div class="glow2"></div>
+
+    <div class="top">
+      <div class="brand">
+        <div class="logo">FC</div>
+        <div>
+          <div class="brand-title">{{PLATFORM_NAME}}</div>
+          <div class="brand-sub">Certificat de réussite · Vérifiable par QR</div>
+        </div>
+      </div>
+      <div class="meta">
+        Délivré le : <b>{{DATE_EMISSION}}</b><br/>
+        <span class="code">{{CERT_CODE}}</span>
+      </div>
+    </div>
+
+    <div class="title">CERTIFICAT DE RÉUSSITE</div>
+    <div class="subtitle">Ce document atteste l’accomplissement et la validation de la formation.</div>
+
+    <div class="content">
+      <div class="left">
+        <div class="box">
+          Ce certificat est délivré à :
+          <div class="name">{{NOM_PRENOM}}</div>
+          pour avoir réussi la formation :
+          <div style="margin-top:6px;font-weight:800;font-size:15px;">{{FORMATION_NOM}}</div>
+        </div>
+
+        <div class="grid">
+          <div class="kv"><div class="k">Date début</div><div class="v">{{DATE_DEBUT}}</div></div>
+          <div class="kv"><div class="k">Date fin</div><div class="v">{{DATE_FIN}}</div></div>
+          <div class="kv"><div class="k">Note finale</div><div class="v">{{NOTE}}</div></div>
+          <div class="kv"><div class="k">Formateur</div><div class="v">{{FORMATEUR}}</div></div>
+        </div>
+
+        <div class="footer">
+          <div>
+            Vérification : scannez le QR code ou utilisez le lien ci-contre.
+          </div>
+          <div class="sign">
+            <div class="sig">Administration {{PLATFORM_NAME}}</div>
+            <div class="sig">Signature Formateur</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="right">
+        <div class="qr"><img src="{{QR_DATA_URI}}" alt="QR"/></div>
+        <div class="verify">{{VERIFY_URL}}</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,2 @@
+-- Fichier volontairement vide pour l'environnement de production.
+-- Les données de test sont désormais gérées via les migrations Flyway (voir db/migration).
