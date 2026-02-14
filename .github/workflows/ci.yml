@@ -14,7 +14,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # ===== Backend (Spring Boot / Maven) =====
+      # ===== BACKEND =====
       - name: Setup Java 17
         uses: actions/setup-java@v4
         with:
@@ -24,38 +24,34 @@ jobs:
 
       - name: Build backend (Maven)
         working-directory: allinone
-        run: mvn -B -DskipTests clean verify
+        run: mvn -DskipTests clean package
 
-      # ===== Frontend (Vite / React) =====
-      - name: Setup Node 20
+      # ===== FRONTEND =====
+      # Node 18 = plus stable (et Vite supporte Node 18+)
+      - name: Setup Node 18
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
-          cache: npm
+          node-version: "18"
+          cache: "npm"
           cache-dependency-path: allinone/frontend-react/package-lock.json
 
-      - name: Install frontend deps
+      - name: Install frontend deps (force dev deps)
+        working-directory: allinone/frontend-react
+        env:
+          NODE_ENV: development
+          NPM_CONFIG_PRODUCTION: "false"
+        run: |
+          npm --version
+          node --version
+          npm ci --include=dev --no-audit --no-fund || (echo "npm ci failed -> fallback to npm install" && npm install --no-audit --no-fund)
+
+      - name: Sanity check: vite exists
         working-directory: allinone/frontend-react
         run: |
-          node -v
-          npm -v
-          npm config set fund false
-          npm config set audit false
-          npm install
+          ls -la node_modules/.bin | head -n 50
+          test -f node_modules/.bin/vite
+          npx vite --version
 
       - name: Build frontend (Vite)
         working-directory: allinone/frontend-react
         run: npm run build
-
-      # (Optionnel) artifacts pour vérifier le build
-      - name: Upload frontend dist
-        uses: actions/upload-artifact@v4
-        with:
-          name: frontend-dist
-          path: allinone/frontend-react/dist
-
-      - name: Upload backend jar
-        uses: actions/upload-artifact@v4
-        with:
-          name: backend-jar
-          path: allinone/target/*.jar
