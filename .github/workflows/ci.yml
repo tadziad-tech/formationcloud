@@ -14,7 +14,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # ========= BACKEND (Spring Boot / Maven) =========
       - name: Setup Java 17
         uses: actions/setup-java@v4
         with:
@@ -23,49 +22,42 @@ jobs:
           cache: maven
 
       - name: Build backend (Maven)
-        run: mvn -B -f allinone/pom.xml -DskipTests package
+        working-directory: allinone
+        run: mvn -B -DskipTests package
 
-      # ========= FRONTEND (React / Vite) =========
       - name: Setup Node 20
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: npm
+          cache: "npm"
           cache-dependency-path: allinone/frontend-react/package-lock.json
 
-      - name: Pin npm (avoid npm bug)
+      - name: Pin npm (avoid npm CI bug)
+        run: npm i -g npm@9.9.3
+
+      - name: Frontend versions
+        working-directory: allinone/frontend-react
         run: |
-          npm --version
-          npm i -g npm@10.2.4
-          npm --version
+          node -v
+          npm -v
+          npm config set fund false
+          npm config set audit false
 
       - name: Install frontend deps (robuste)
         working-directory: allinone/frontend-react
         run: |
-          set -euxo pipefail
-          node -v
-          npm -v
-
-          npm config set fund false
-          npm config set audit false
-
-          # Tentative clean install
+          set -e
+          echo "Try npm ci..."
           if npm ci --no-audit --no-fund; then
             echo "npm ci OK"
           else
-            echo "::warning::npm ci failed (npm bug). Fallback to npm install."
-            echo "---- npm logs ----"
-            ls -la ~/.npm/_logs || true
-            tail -n 200 ~/.npm/_logs/*debug-0.log || true
-            npm install --no-audit --no-fund
+            echo "npm ci FAILED -> fallback npm install"
+            rm -rf node_modules
+            npm install --include=dev --no-audit --no-fund
           fi
 
-          # Vérif: vite doit exister localement
-          if [ ! -f node_modules/.bin/vite ]; then
-            echo "::error::vite missing after install"
-            ls -la node_modules/.bin || true
-            exit 1
-          fi
+          # Sanity check: vite doit exister dans node_modules
+          npx --no-install vite --version
 
       - name: Build frontend (Vite)
         working-directory: allinone/frontend-react
