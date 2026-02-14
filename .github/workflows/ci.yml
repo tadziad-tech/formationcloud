@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: ["main"]
+    branches: [ "main" ]
   pull_request:
-    branches: ["main"]
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -29,41 +29,38 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: npm
+          cache: "npm"
           cache-dependency-path: allinone/frontend-react/package-lock.json
 
-      - name: Pin npm (stable)
+      - name: Pin npm (stability)
         run: npm i -g npm@9.9.3
 
-      - name: Frontend versions
+      - name: Frontend install + build (robuste)
         working-directory: allinone/frontend-react
+        shell: bash
         run: |
+          set -euxo pipefail
+
+          # Force registry public (et évite les lockfiles “internes”)
+          npm config set registry https://registry.npmjs.org/
+          npm config set audit false
+          npm config set fund false
+          npm config set fetch-retries 5
+          npm config set fetch-retry-mintimeout 20000
+          npm config set fetch-retry-maxtimeout 120000
+          npm config set fetch-timeout 300000
+
           node -v
           npm -v
 
-      - name: Install frontend deps (robuste)
-        working-directory: allinone/frontend-react
-        env:
-          NODE_ENV: development
-        run: |
-          set -e
-          npm config set fund false
-          npm config set audit false
-
           echo "Try npm ci..."
-          if npm ci --no-audit --no-fund; then
+          if npm ci --include=dev --no-audit --no-fund; then
             echo "npm ci OK"
           else
             echo "npm ci FAILED -> fallback npm install"
             rm -rf node_modules
-            npm install --no-audit --no-fund --include=dev
+            npm install --include=dev --no-audit --no-fund
           fi
 
-          echo "Sanity check: vite must exist"
           npx --no-install vite --version
-
-      - name: Build frontend (Vite)
-        working-directory: allinone/frontend-react
-        env:
-          NODE_ENV: development
-        run: npm run build
+          npm run build
