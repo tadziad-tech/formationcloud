@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
@@ -29,10 +29,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "npm"
+          cache: npm
           cache-dependency-path: allinone/frontend-react/package-lock.json
 
-      - name: Pin npm (avoid npm CI bug)
+      - name: Pin npm (stable)
         run: npm i -g npm@9.9.3
 
       - name: Frontend versions
@@ -40,25 +40,30 @@ jobs:
         run: |
           node -v
           npm -v
-          npm config set fund false
-          npm config set audit false
 
       - name: Install frontend deps (robuste)
         working-directory: allinone/frontend-react
+        env:
+          NODE_ENV: development
         run: |
           set -e
+          npm config set fund false
+          npm config set audit false
+
           echo "Try npm ci..."
           if npm ci --no-audit --no-fund; then
             echo "npm ci OK"
           else
             echo "npm ci FAILED -> fallback npm install"
             rm -rf node_modules
-            npm install --include=dev --no-audit --no-fund
+            npm install --no-audit --no-fund --include=dev
           fi
 
-          # Sanity check: vite doit exister dans node_modules
+          echo "Sanity check: vite must exist"
           npx --no-install vite --version
 
       - name: Build frontend (Vite)
         working-directory: allinone/frontend-react
+        env:
+          NODE_ENV: development
         run: npm run build
