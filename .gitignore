@@ -32,3 +32,4 @@ Thumbs.db
 # ===== Uploads runtime =====
 uploads/
 **/uploads/
+package-lock.json
