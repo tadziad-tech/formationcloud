@@ -27,7 +27,7 @@ jobs:
         run: mvn -DskipTests clean package
 
       # ===== FRONTEND =====
-      # Node 18 = plus stable (et Vite supporte Node 18+)
+      # Node 18 = plus stable que Node 20 pour éviter le bug npm "Exit handler never called"
       - name: Setup Node 18
         uses: actions/setup-node@v4
         with:
@@ -35,20 +35,27 @@ jobs:
           cache: "npm"
           cache-dependency-path: allinone/frontend-react/package-lock.json
 
-      - name: Install frontend deps (force dev deps)
+      - name: Install frontend deps (robuste)
         working-directory: allinone/frontend-react
         env:
           NODE_ENV: development
           NPM_CONFIG_PRODUCTION: "false"
         run: |
-          npm --version
           node --version
-          npm ci --include=dev --no-audit --no-fund || (echo "npm ci failed -> fallback to npm install" && npm install --no-audit --no-fund)
+          npm --version
 
-      - name: Sanity check: vite exists
-        working-directory: allinone/frontend-react
-        run: |
-          ls -la node_modules/.bin | head -n 50
+          # 1) Essai propre (CI)
+          npm ci --include=dev --no-audit --no-fund || true
+
+          # 2) Si npm a buggé, on nettoie et on fait un install classique
+          if [ ! -f "node_modules/.bin/vite" ]; then
+            echo "vite absent -> fallback install"
+            npm cache clean --force
+            rm -rf node_modules
+            npm install --no-audit --no-fund
+          fi
+
+          # Check final obligatoire
           test -f node_modules/.bin/vite
           npx vite --version
 
