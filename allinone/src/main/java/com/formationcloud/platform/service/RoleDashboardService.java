@@ -23,7 +23,6 @@ public class RoleDashboardService {
     private final EvaluationRepository evaluationRepository;
     private final ResultatEvaluationRepository resultatEvaluationRepository;
     private final CertificatRepository certificatRepository;
-    private final TacheRepository tacheRepository;
     private final NotificationRepository notificationRepository;
 
     @Transactional(readOnly = true)
@@ -136,12 +135,6 @@ public class RoleDashboardService {
         // Certificats
         long certCount = certificatRepository.countByStagiaireId(stagiaireId);
 
-        // Tâches
-        List<Tache> tasks = tacheRepository.findByStagiaire(u);
-        long totalTasks = tasks.size();
-        long doneTasks = tasks.stream().filter(t -> t.getStatut() == StatutTache.TERMINEE).count();
-        List<Tache> lateTasks = tacheRepository.findTachesEnRetardByStagiaire(stagiaireId, LocalDate.now());
-
         // Notifications
         long unreadNotifs = notificationRepository.countNotificationsNonLuesByDestinataire(stagiaireId);
         List<Notification> notifs = notificationRepository.findNotificationsNonLuesByDestinataire(stagiaireId)
@@ -174,12 +167,8 @@ public class RoleDashboardService {
         totals.setInscriptionsActives(activeInsc.size());
         totals.setInscriptionsEnAttente(pending);
         totals.setCertificatsObtenus(certCount);
-        totals.setTachesTotal(totalTasks);
-        totals.setTachesTerminees(doneTasks);
-        totals.setTachesEnRetard(lateTasks.size());
         totals.setNotificationsNonLues(unreadNotifs);
         totals.setEvaluationsACompleter(upcoming.size());
-        totals.setProgressionTaches(totalTasks == 0 ? 0 : (int) Math.round((doneTasks * 100.0) / totalTasks));
         dto.setTotals(totals);
 
         // lists
@@ -187,13 +176,6 @@ public class RoleDashboardService {
                 .sorted(Comparator.comparing(Inscription::getDateInscription, Comparator.nullsLast(Comparator.reverseOrder())))
                 .limit(6)
                 .map(this::toSimpleInscription)
-                .toList());
-
-        dto.setTachesPrioritaires(tasks.stream()
-                .filter(t -> t.getStatut() != StatutTache.TERMINEE)
-                .sorted(Comparator.comparing(Tache::getDateFin, Comparator.nullsLast(Comparator.naturalOrder())))
-                .limit(6)
-                .map(this::toSimpleTache)
                 .toList());
 
         dto.setEvaluations(upcomingTop.stream().map(this::toSimpleEvaluationStagiaire).toList());
@@ -257,16 +239,6 @@ public class RoleDashboardService {
                 i.getStatut() != null ? i.getStatut().name() : null,
                 f != null ? f.getId() : null,
                 f != null ? f.getNom() : null
-        );
-    }
-
-    private StagiaireDashboardOverviewDTO.SimpleTache toSimpleTache(Tache t) {
-        return new StagiaireDashboardOverviewDTO.SimpleTache(
-                t.getId(),
-                t.getTitre(),
-                t.getDateFin() != null ? t.getDateFin().toString() : null,
-                t.getStatut() != null ? t.getStatut().name() : null,
-                t.getPourcentageAccomplissement()
         );
     }
 

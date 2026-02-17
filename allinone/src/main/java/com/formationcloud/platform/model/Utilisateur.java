@@ -88,10 +88,6 @@ public class Utilisateur {
 
 	@OneToMany(mappedBy = "stagiaire", cascade = CascadeType.ALL)
 		@JsonIgnore
-	private List<Tache> taches = new ArrayList<>();
-
-	@OneToMany(mappedBy = "stagiaire", cascade = CascadeType.ALL)
-		@JsonIgnore
 	private List<Certificat> certificats = new ArrayList<>();
 
 	@OneToMany(mappedBy = "destinataire", cascade = CascadeType.ALL)

@@ -21,9 +21,6 @@ public class StagiaireDashboardOverviewDTO {
     /** Dernières inscriptions de l'utilisateur */
     private List<SimpleInscription> inscriptions = new ArrayList<>();
 
-    /** Tâches prioritaires (retard / à venir) */
-    private List<SimpleTache> tachesPrioritaires = new ArrayList<>();
-
     /** Évaluations à venir / à compléter */
     private List<SimpleEvaluation> evaluations = new ArrayList<>();
 
@@ -43,15 +40,9 @@ public class StagiaireDashboardOverviewDTO {
 
         private long certificatsObtenus;
 
-        private long tachesTotal;
-        private long tachesTerminees;
-        private long tachesEnRetard;
         private long notificationsNonLues;
 
         private long evaluationsACompleter;
-
-        /** Progression globale des tâches (0-100) */
-        private int progressionTaches;
     }
 
     @Data
@@ -63,17 +54,6 @@ public class StagiaireDashboardOverviewDTO {
         private String statut;
         private Long formationId;
         private String formationTitre;
-    }
-
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class SimpleTache {
-        private Long id;
-        private String titre;
-        private String dateFin;
-        private String statut;
-        private Integer progression;
     }
 
     @Data

@@ -111,8 +111,6 @@ public class NotificationController {
         return switch (n.getType()) {
             case NOUVELLE_FORMATION -> "Nouvelle formation";
             case EVALUATION_DISPONIBLE -> "Évaluation disponible";
-            case TACHE_ASSIGNEE -> "Nouvelle tâche";
-            case RAPPEL_DEADLINE -> "Rappel deadline";
             case INSCRIPTION_VALIDEE -> "Inscription validée";
             case INSCRIPTION_REFUSEE -> "Inscription refusée";
             case CERTIFICAT_OBTENU -> "Certificat obtenu";
@@ -128,6 +126,7 @@ public class NotificationController {
             case TP_EN_RETARD -> "TP en retard";
             case INSCRIPTION_EN_ATTENTE_ADMIN -> "Inscription en attente";
             case FORMATION_ASSIGNEE -> "Formation assignée";
+            case AUTRE -> "Notification";
         };
     }
 

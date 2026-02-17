@@ -18,9 +18,6 @@ public class DashboardStatsDTO {
 	private long totalInscriptions;
 	private long inscriptionsEnAttente;
 	private long totalCertificats;
-	private long totalTaches;
-	private long tachesEnCours;
-	private long tachesEnRetard;
 	private long totalEvaluations;
 	private long notificationsNonLues;
 }

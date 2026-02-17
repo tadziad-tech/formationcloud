@@ -15,7 +15,6 @@ public class DashboardService {
 	private final FormationService formationService;
 	private final InscriptionService inscriptionService;
 	private final CertificatService certificatService;
-	private final TacheService tacheService;
 	private final NotificationService notificationService;
 
 	public DashboardStatsDTO getGlobalStats() {
@@ -37,11 +36,6 @@ public class DashboardService {
 
 		// Statistiques certificats
 		stats.setTotalCertificats(certificatService.findAll().size());
-
-		// Statistiques tâches
-		stats.setTotalTaches(tacheService.findAll().size());
-		stats.setTachesEnCours(tacheService.countByStatut(StatutTache.EN_COURS));
-		stats.setTachesEnRetard(tacheService.countByStatut(StatutTache.EN_RETARD));
 
 		return stats;
 	}
@@ -68,10 +62,6 @@ public class DashboardService {
 
 		// Certificats obtenus
 		stats.setTotalCertificats(certificatService.findByStagiaire(stagiaireId).size());
-
-		// Tâches
-		stats.setTotalTaches(tacheService.findByStagiaire(stagiaireId).size());
-		stats.setTachesEnRetard(tacheService.findTachesEnRetard(stagiaireId).size());
 
 		// Notifications non lues
 		stats.setNotificationsNonLues(notificationService.countNotificationsNonLues(stagiaireId));

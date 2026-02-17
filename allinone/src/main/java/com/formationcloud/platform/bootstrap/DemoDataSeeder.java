@@ -33,7 +33,6 @@ public class DemoDataSeeder implements ApplicationRunner {
     private final EvaluationRepository evaluationRepository;
     private final ResultatEvaluationRepository resultatEvaluationRepository;
     private final CertificatRepository certificatRepository;
-    private final TacheRepository tacheRepository;
     private final NotificationRepository notificationRepository;
 
     private final PasswordEncoder passwordEncoder;
@@ -288,45 +287,10 @@ public class DemoDataSeeder implements ApplicationRunner {
 
         certificatRepository.saveAll(List.of(c1, c2));
 
-        // ===== Tâches =====
-        Tache t1 = new Tache();
-        t1.setTitre("TP Java - POO");
-        t1.setDescription("Créer une mini app avec classes, héritage et interfaces");
-        t1.setStagiaire(stag1);
-        t1.setFormation(f1);
-        t1.setPourcentageAccomplissement(100);
-        t1.setStatut(StatutTache.TERMINEE);
-        t1.setDateDebut(today.minusDays(9));
-        t1.setDateFin(today.minusDays(5));
-
-        Tache t2 = new Tache();
-        t2.setTitre("Projet Python - Nettoyage dataset");
-        t2.setDescription("Nettoyage + EDA sur un dataset Kaggle");
-        t2.setStagiaire(stag1);
-        t2.setFormation(f3);
-        t2.setPourcentageAccomplissement(60);
-        t2.setStatut(StatutTache.EN_COURS);
-        t2.setDateDebut(today.minusDays(5));
-        t2.setDateFin(today.plusDays(3));
-
-        Tache t3 = new Tache();
-        t3.setTitre("Pipeline CI/CD - Docker" );
-        t3.setDescription("Build + test + deploy (demo)" );
-        t3.setStagiaire(stag2);
-        t3.setFormation(f4);
-        t3.setPourcentageAccomplissement(20);
-        t3.setStatut(StatutTache.ASSIGNEE);
-        t3.setDateDebut(today.minusDays(2));
-        t3.setDateFin(today.plusDays(6));
-
-        tacheRepository.saveAll(List.of(t1, t2, t3));
-
         // ===== Notifications ===== (liens avec formationId pour deep-link admin)
         notificationRepository.saveAll(List.of(
                 new Notification(null, stag1, TypeNotification.CERTIFICAT_OBTENU,
                         "Félicitations ! Certificat obtenu pour Java Débutant 🎉", false, null, null, "/formations?formationId=" + f1.getId()),
-                new Notification(null, stag2, TypeNotification.TACHE_ASSIGNEE,
-                        "Nouvelle tâche assignée : Pipeline CI/CD - Docker", false, null, null, "/formations?formationId=" + f4.getId()),
                 new Notification(null, formateur1, TypeNotification.NOUVELLE_INSCRIPTION,
                         "Nouvelle inscription en attente : " + stag3.getPrenom() + " " + stag3.getNom(), false, null, null, "/formations?formationId=" + f3.getId()),
                 // Notifications pour admin (toujours formationId pour ouvrir la bonne formation)

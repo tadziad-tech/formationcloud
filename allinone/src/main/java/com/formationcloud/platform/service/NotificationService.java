@@ -108,15 +108,6 @@ public List<Notification> findAll() {
 		notificationRepository.save(notification);
 	}
 
-	public void envoyerNotificationTacheAssignee(Tache tache) {
-		Notification notification = new Notification();
-		notification.setDestinataire(tache.getStagiaire());
-		notification.setType(TypeNotification.TACHE_ASSIGNEE);
-		notification.setMessage("Nouvelle tâche assignée: " + tache.getTitre());
-		notification.setLien("/taches/" + tache.getId());
-		notificationRepository.save(notification);
-	}
-
 	public void envoyerNotificationCertificatObtenu(Certificat certificat) {
 		Notification notification = new Notification();
 		notification.setDestinataire(certificat.getStagiaire());
@@ -136,16 +127,6 @@ public List<Notification> findAll() {
 			notification.setLien("/evaluations/" + evaluation.getId());
 			notificationRepository.save(notification);
 		}
-	}
-
-	public void envoyerNotificationRappelDeadline(Tache tache) {
-		Notification notification = new Notification();
-		notification.setDestinataire(tache.getStagiaire());
-		notification.setType(TypeNotification.RAPPEL_DEADLINE);
-		notification
-				.setMessage("Rappel: La tâche '" + tache.getTitre() + "' arrive à échéance le " + tache.getDateFin());
-		notification.setLien("/taches/" + tache.getId());
-		notificationRepository.save(notification);
 	}
 
 	public void envoyerNotificationValidationCompte(Utilisateur utilisateur) {
