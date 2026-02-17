@@ -32,4 +32,5 @@ Thumbs.db
 # ===== Uploads runtime =====
 uploads/
 **/uploads/
-package-lock.json
+# NOTE: Do NOT ignore package-lock.json.
+# CI uses `npm ci` which requires it for reproducible builds.
