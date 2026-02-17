@@ -34,3 +34,4 @@ uploads/
 **/uploads/
 # NOTE: Do NOT ignore package-lock.json.
 # CI uses `npm ci` which requires it for reproducible builds.
+allinone/src/main/resources/static/app/
