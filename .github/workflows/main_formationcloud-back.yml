@@ -16,7 +16,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Frontend build first so the SPA is embedded in the JAR
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -64,6 +63,10 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: java-app
+          path: .
+
+      - name: Check downloaded files
+        run: ls -lah
 
       - name: Login to Azure
         uses: azure/login@v2
@@ -78,4 +81,4 @@ jobs:
         with:
           app-name: 'formationcloud-back'
           slot-name: 'Production'
-          package: formationcloud-platform-1.0.0.jar
+          package: '*.jar'
